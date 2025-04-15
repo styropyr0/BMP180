@@ -14,25 +14,53 @@
 class MetricSystem
 {
 public:
-    uint8_t pressure = BMP180_PRESSURE_PASCAL;
-    uint8_t temperature = BMP180_TEMP_CELSIUS;
-    uint8_t altitude = BMP180_UNIT_METRE;
+    uint8_t pressure, temperature, altitude;
+    String pressureUnit, temperatureUnit, altitudeUnit;
 
-    virtual uint8_t getType() { return 0; }
+    /**
+     * @brief Constructor for the MetricSystem class.
+     * @param pressure The pressure unit to be used.
+     * @param temperature The temperature unit to be used.
+     * @param altitude The altitude unit to be used.
+     */
+    MetricSystem(uint8_t temperature, uint8_t pressure, uint8_t altitude)
+    {
+        this->pressure = pressure;
+        this->temperature = temperature;
+        this->altitude = altitude;
+    }
+
+    /**
+     * @brief Default constructor for the MetricSystem class.
+     * @details Initializes the pressure, temperature, and altitude units to default values.
+     */
+    MetricSystem()
+    {
+        this->pressure = BMP180_PRESSURE_PASCAL;
+        this->temperature = BMP180_TEMP_CELSIUS;
+        this->altitude = BMP180_UNIT_METRE;
+    }
+
+    virtual uint8_t getType() const { return 0; }
 
     float convertPressure(float pressure)
     {
         switch (this->pressure)
         {
         case BMP180_PRESSURE_PSI:
+            pressureUnit = METRIC_UNIT_PSI;
             return pressure * 0.00014503773773;
         case BMP180_PRESSURE_BAR:
+            pressureUnit = METRIC_UNIT_BAR;
             return pressure * 0.00001;
         case BMP180_PRESSURE_INCH_HG:
+            pressureUnit = METRIC_UNIT_INCH_HG;
             return pressure * 0.000295299830714;
         case BMP180_PRESSURE_ATM:
+            pressureUnit = METRIC_UNIT_ATM;
             return pressure * 0.00000986923;
         default:
+            pressureUnit = METRIC_UNIT_PASCAL;
             return pressure;
         }
         return pressure;
@@ -43,8 +71,10 @@ public:
         switch (this->altitude)
         {
         case BMP180_UNIT_FEET:
+            altitudeUnit = METRIC_UNIT_FEET;
             return altitude * 3.28084;
         default:
+            altitudeUnit = METRIC_UNIT_METRE;
             return altitude;
         }
         return altitude;
@@ -55,10 +85,13 @@ public:
         switch (this->temperature)
         {
         case BMP180_TEMP_FAHRENHEIT:
+            temperatureUnit = METRIC_UNIT_FAHRENHEIT;
             return (temperature * 9.0 / 5.0) + 32.0;
         case BMP180_TEMP_KELVIN:
+            temperatureUnit = METRIC_UNIT_KELVIN;
             return temperature + 273.15;
         default:
+            temperatureUnit = METRIC_UNIT_CELSIUS;
             return temperature;
         }
         return temperature;
@@ -73,13 +106,10 @@ public:
 class ImperialSystem : public MetricSystem
 {
 public:
-    ImperialSystem(uint8_t pressureUnit, uint8_t temperatureUnit, uint8_t altitudeUnit)
-    {
-        this->pressure = pressureUnit;
-        this->temperature = temperatureUnit;
-        this->altitude = altitudeUnit;
-    }
-
+    /**
+     * @brief Constructor for the ImperialSystem class.
+     * @details Initializes the pressure, temperature, and altitude units to imperial values.
+     */
     ImperialSystem()
     {
         this->pressure = BMP180_PRESSURE_PSI;
@@ -87,7 +117,7 @@ public:
         this->altitude = BMP180_UNIT_FEET;
     }
 
-    uint8_t getType() override { return IMPERIAL_SYSTEM; }
+    uint8_t getType() const override { return IMPERIAL_SYSTEM; }
 };
 
 /**
@@ -98,13 +128,10 @@ public:
 class InternationalSystem : public MetricSystem
 {
 public:
-    InternationalSystem(uint8_t pressureUnit, uint8_t temperatureUnit, uint8_t altitudeUnit)
-    {
-        this->pressure = pressureUnit;
-        this->temperature = temperatureUnit;
-        this->altitude = altitudeUnit;
-    }
-
+    /**
+     * @brief Constructor for the InternationalSystem class.
+     * @details Initializes the pressure, temperature, and altitude units to international values.
+     */
     InternationalSystem()
     {
         this->pressure = BMP180_PRESSURE_PASCAL;
@@ -112,7 +139,7 @@ public:
         this->altitude = BMP180_UNIT_METRE;
     }
 
-    uint8_t getType() override { return INTERNATIONAL_SYSTEM; }
+    uint8_t getType() const override { return INTERNATIONAL_SYSTEM; }
 };
 
 #endif // METRIC_SYSTEM_PRIVATE_H

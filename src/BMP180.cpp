@@ -1,7 +1,7 @@
 #include "BMP180.h"
 #include <SensorHubTemplates.h>
 
-BMP180::BMP180() : sensorHub(BMP180_I2C_ADDR), metricSystem(&ImperialSystem()) {}
+BMP180::BMP180() : sensorHub(BMP180_I2C_ADDR) {}
 
 bool BMP180::begin()
 {
@@ -51,7 +51,11 @@ float BMP180::readTemperature()
     int32_t X1 = (UT - AC6) * (AC5 / pow(2, 15));
     int32_t X2 = (MC * pow(2, 11)) / (X1 + MD);
     B5 = X1 + X2;
-    return metricSystem->convertTemperature((B5 + 8) / pow(2, 4) / 10.0);
+
+    if (!metricSystem)
+        return (B5 + 8) / pow(2, 4) / 10.0;
+    else
+        return metricSystem->convertTemperature((B5 + 8) / pow(2, 4) / 10.0);
 }
 
 float BMP180::readPressure()
@@ -76,7 +80,11 @@ float BMP180::readPressure()
     X1 = (X1 * 3038) >> 16;
     X2 = (-7357 * p) >> 16;
     pressure = p + ((X1 + X2 + 3791) >> 4);
-    return metricSystem->convertPressure(pressure);
+
+    if (!metricSystem)
+        return pressure;
+    else
+        return metricSystem->convertPressure(pressure);
 }
 
 void BMP180::setPressureOverSampling(uint8_t os)
@@ -87,10 +95,51 @@ void BMP180::setPressureOverSampling(uint8_t os)
 float BMP180::readAltitude()
 {
     readPressure();
-    return metricSystem->convertAltitude(44330 * (1 - pow(pressure / 101325, 0.1903)));
+
+    if (!metricSystem)
+        return 44330 * (1 - pow(pressure / 101325, 0.1903));
+    else
+        return metricSystem->convertAltitude(44330 * (1 - pow(pressure / 101325, 0.1903)));
 }
 
-void BMP180::setMetricSystem(MetricSystem &metricSystem)
+void BMP180::setMetricSystem(const MetricSystem &metricSystem)
 {
-    this->metricSystem = &metricSystem;
+    if (this->metricSystem)
+    {
+        if (this->metricSystem->getType() == metricSystem.getType())
+            return;
+
+        delete this->metricSystem;
+        this->metricSystem = nullptr;
+    }
+    if (metricSystem.getType() == INTERNATIONAL_SYSTEM)
+        this->metricSystem = new InternationalSystem();
+    else if (metricSystem.getType() == IMPERIAL_SYSTEM)
+        this->metricSystem = new ImperialSystem();
+    else
+        this->metricSystem = new MetricSystem(metricSystem.temperature, metricSystem.pressure, metricSystem.altitude);
+}
+
+String BMP180::getTemperatureUnit()
+{
+    if (metricSystem)
+        return metricSystem->temperatureUnit;
+    else
+        return METRIC_UNIT_CELSIUS;
+}
+
+String BMP180::getPressureUnit()
+{
+    if (metricSystem)
+        return metricSystem->pressureUnit;
+    else
+        return METRIC_UNIT_PASCAL;
+}
+
+String BMP180::getAltitudeUnit()
+{
+    if (metricSystem)
+        return metricSystem->altitudeUnit;
+    else
+        return METRIC_UNIT_METRE;
 }

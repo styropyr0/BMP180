@@ -48,5 +48,17 @@
 #define BMP180_PRESSURE_INCH_HG 123
 #define BMP180_PRESSURE_ATM 124
 
+// Units
+#define METRIC_UNIT_METRE "m"
+#define METRIC_UNIT_FEET "ft"
+#define METRIC_UNIT_CELSIUS "°C"
+#define METRIC_UNIT_FAHRENHEIT "°F"
+#define METRIC_UNIT_KELVIN "K"
+#define METRIC_UNIT_PASCAL "Pa"
+#define METRIC_UNIT_PSI "psi"
+#define METRIC_UNIT_BAR "bar"
+#define METRIC_UNIT_INCH_HG "inHg"
+#define METRIC_UNIT_ATM "atm"
+
 #endif // __cplusplus
 #endif // BMP180DEFS

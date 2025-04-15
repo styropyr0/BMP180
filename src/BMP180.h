@@ -68,7 +68,25 @@ public:
      * @param metricSystem A custom metric system to be used. You may use the InternationalSystem or ImperialSystem objects.
      * @details This method allows you to set a custom metric system for the sensor.
      */
-    void setMetricSystem(MetricSystem &metricSystem);
+    void setMetricSystem(const MetricSystem &metricSystem);
+
+    /**
+     * @brief Returns the temperature unit used by the sensor.
+     * @return The temperature unit as a string.
+     */
+    String getTemperatureUnit();
+
+    /**
+     * @brief Returns the pressure unit used by the sensor.
+     * @return The pressure unit as a string.
+     */
+    String getPressureUnit();
+
+    /**
+     * @brief Returns the altitude unit used by the sensor.
+     * @return The altitude unit as a string.
+     */
+    String getAltitudeUnit();
 
 private:
     SensorHub sensorHub;
@@ -77,7 +95,7 @@ private:
     int16_t AC1, AC2, AC3, _B1, _B2, MB, MC, MD;
     uint16_t AC4, AC5, AC6;
     float pressure = 0.0;
-    
+
     MetricSystem *metricSystem;
 
     bool readCalibParams();
