@@ -36,27 +36,30 @@ public:
      */
     MetricSystem()
     {
-        this->pressure = BMP180_PRESSURE_PASCAL;
-        this->temperature = BMP180_TEMP_CELSIUS;
+        this->pressure = BMP180_UNIT_PASCAL;
+        pressureUnit = METRIC_UNIT_PASCAL;
+        this->temperature = BMP180_UNIT_CELSIUS;
+        temperatureUnit = METRIC_UNIT_CELSIUS;
         this->altitude = BMP180_UNIT_METRE;
+        altitudeUnit = METRIC_UNIT_METRE;
     }
 
-    virtual uint8_t getType() const { return 0; }
+    virtual uint8_t getType() const { return CUSTOM_SYSTEM; }
 
     float convertPressure(float pressure)
     {
         switch (this->pressure)
         {
-        case BMP180_PRESSURE_PSI:
+        case BMP180_UNIT_PSI:
             pressureUnit = METRIC_UNIT_PSI;
             return pressure * 0.00014503773773;
-        case BMP180_PRESSURE_BAR:
+        case BMP180_UNIT_BAR:
             pressureUnit = METRIC_UNIT_BAR;
             return pressure * 0.00001;
-        case BMP180_PRESSURE_INCH_HG:
+        case BMP180_UNIT_INCH_HG:
             pressureUnit = METRIC_UNIT_INCH_HG;
             return pressure * 0.000295299830714;
-        case BMP180_PRESSURE_ATM:
+        case BMP180_UNIT_ATM:
             pressureUnit = METRIC_UNIT_ATM;
             return pressure * 0.00000986923;
         default:
@@ -84,10 +87,10 @@ public:
     {
         switch (this->temperature)
         {
-        case BMP180_TEMP_FAHRENHEIT:
+        case BMP180_UNIT_FAHRENHEIT:
             temperatureUnit = METRIC_UNIT_FAHRENHEIT;
             return (temperature * 9.0 / 5.0) + 32.0;
-        case BMP180_TEMP_KELVIN:
+        case BMP180_UNIT_KELVIN:
             temperatureUnit = METRIC_UNIT_KELVIN;
             return temperature + 273.15;
         default:
@@ -112,9 +115,12 @@ public:
      */
     ImperialSystem()
     {
-        this->pressure = BMP180_PRESSURE_PSI;
-        this->temperature = BMP180_TEMP_FAHRENHEIT;
+        this->pressure = BMP180_UNIT_PSI;
+        pressureUnit = METRIC_UNIT_PSI;
+        this->temperature = BMP180_UNIT_FAHRENHEIT;
+        temperatureUnit = METRIC_UNIT_FAHRENHEIT;
         this->altitude = BMP180_UNIT_FEET;
+        altitudeUnit = METRIC_UNIT_FEET;
     }
 
     uint8_t getType() const override { return IMPERIAL_SYSTEM; }
@@ -134,9 +140,12 @@ public:
      */
     InternationalSystem()
     {
-        this->pressure = BMP180_PRESSURE_PASCAL;
-        this->temperature = BMP180_TEMP_CELSIUS;
+        this->pressure = BMP180_UNIT_PASCAL;
+        pressureUnit = METRIC_UNIT_PASCAL;
+        this->temperature = BMP180_UNIT_CELSIUS;
+        temperatureUnit = METRIC_UNIT_CELSIUS;
         this->altitude = BMP180_UNIT_METRE;
+        altitudeUnit = METRIC_UNIT_METRE;
     }
 
     uint8_t getType() const override { return INTERNATIONAL_SYSTEM; }

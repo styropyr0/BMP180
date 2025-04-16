@@ -154,18 +154,18 @@ void loop() {
 ### Temperature Units
 | Constant                | Unit         |
 |-------------------------|--------------|
-| `BMP180_TEMP_CELSIUS`   | °C           |
-| `BMP180_TEMP_FAHRENHEIT`| °F           |
-| `BMP180_TEMP_KELVIN`    | K            |
+| `BMP180_UNIT_CELSIUS`   | °C           |
+| `BMP180_UNIT_FAHRENHEIT`| °F           |
+| `BMP180_UNIT_KELVIN`    | K            |
 
 ### Pressure Units
 | Constant               | Unit  |
 |------------------------|-------|
-| `BMP180_PRESSURE_PASCAL`| Pa   |
-| `BMP180_PRESSURE_PSI`   | psi  |
-| `BMP180_PRESSURE_BAR`   | bar  |
-| `BMP180_PRESSURE_INCH_HG`| inHg|
-| `BMP180_PRESSURE_ATM`   | atm  |
+| `BMP180_UNIT_PASCAL`| Pa   |
+| `BMP180_UNIT_PSI`   | psi  |
+| `BMP180_UNIT_BAR`   | bar  |
+| `BMP180_UNIT_INCH_HG`| inHg|
+| `BMP180_UNIT_ATM`   | atm  |
 
 ### Altitude Units
 | Constant             | Unit   |
