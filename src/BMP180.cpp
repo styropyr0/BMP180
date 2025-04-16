@@ -51,11 +51,9 @@ float BMP180::readTemperature()
     int32_t X1 = (UT - AC6) * (AC5 / pow(2, 15));
     int32_t X2 = (MC * pow(2, 11)) / (X1 + MD);
     B5 = X1 + X2;
+    float temp = (B5 + 8) / pow(2, 4) / 10.0;
 
-    if (!metricSystem)
-        return (B5 + 8) / pow(2, 4) / 10.0;
-    else
-        return metricSystem->convertTemperature((B5 + 8) / pow(2, 4) / 10.0);
+    return !metricSystem ? temp : metricSystem->convertTemperature(temp);
 }
 
 float BMP180::readPressure()
@@ -81,10 +79,7 @@ float BMP180::readPressure()
     X2 = (-7357 * p) >> 16;
     pressure = p + ((X1 + X2 + 3791) >> 4);
 
-    if (!metricSystem)
-        return pressure;
-    else
-        return metricSystem->convertPressure(pressure);
+    return !metricSystem ? pressure : metricSystem->convertPressure(pressure);
 }
 
 void BMP180::setPressureOverSampling(uint8_t os)
@@ -95,11 +90,8 @@ void BMP180::setPressureOverSampling(uint8_t os)
 float BMP180::readAltitude()
 {
     readPressure();
-
-    if (!metricSystem)
-        return 44330 * (1 - pow(pressure / 101325, 0.1903));
-    else
-        return metricSystem->convertAltitude(44330 * (1 - pow(pressure / 101325, 0.1903)));
+    float altitude = 44330.0 * (1.0 - pow(pressure / 101919.3, 0.1903));
+    return !metricSystem ? altitude : metricSystem->convertAltitude(altitude);
 }
 
 void BMP180::setMetricSystem(const MetricSystem &metricSystem)
