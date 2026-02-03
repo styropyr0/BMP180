@@ -15,7 +15,7 @@ void setup()
 void loop()
 {
   Serial.print("Altitude: ");
-  Serial.print(altitude);
+  Serial.print(bmp180.readAltitude());
   Serial.println(" m");
 
   delay(2000);
