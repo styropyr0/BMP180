@@ -48,10 +48,10 @@ void BMP180::readUP()
 float BMP180::readTemperature()
 {
     readUT();
-    int32_t X1 = (UT - AC6) * (AC5 / pow(2, 15));
-    int32_t X2 = (MC * pow(2, 11)) / (X1 + MD);
+    int32_t X1 = ((UT - AC6) * AC5) >> 15;
+    int32_t X2 = (MC << 11) / (X1 + MD);
     B5 = X1 + X2;
-    float temp = (B5 + 8) / pow(2, 4) / 10.0;
+    float temp = ((B5 + 8) >> 4) / 10.0;
 
     return !metricSystem ? temp : metricSystem->convertTemperature(temp);
 }
